@@ -65,8 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let userEditedCutter = false;
     let userEditedCdu = false;
 
-    cutter.addEventListener('change', () => userEditedCutter = true);
-    cdu.addEventListener('change', () => userEditedCdu = true);
+    cutter.addEventListener('input', () => {
+        userEditedCutter = (cutter.value.trim() !== '');
+    });
+    cdu.addEventListener('input', () => {
+        userEditedCdu = (cdu.value.trim() !== '');
+    });
 
     function toTitleCase(str) {
         return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
@@ -90,13 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateCutter(surname, title) {
-        if(!surname || !title) return '';
+        if(!surname) return '';
         
         // Remove acentos
         const cleanSurname = surname.trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-        const cleanTitle = title.trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        const cleanTitle = (title || 'a').trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
         
-        if(!cleanSurname || !cleanTitle) return '';
+        if(!cleanSurname) return '';
 
         // Ignorar artigos iniciais no título
         let words = cleanTitle.split(' ').filter(w => w.length > 0);
@@ -223,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Autogerar Cutter
-        if (!userEditedCutter && authorSurname.value && title.value) {
+        if (!userEditedCutter && authorSurname.value) {
             const genCutter = generateCutter(authorSurname.value, title.value);
             cutter.value = genCutter;
         }
