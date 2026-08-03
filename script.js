@@ -73,7 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function toTitleCase(str) {
-        return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+        return str.split(' ').map((w, i) => {
+            const lowers = ['da', 'de', 'do', 'das', 'dos', 'e'];
+            if (lowers.includes(w.toLowerCase()) && i > 0) return w.toLowerCase();
+            return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+        }).join(' ');
     }
 
     function formatBibliographicName(name, surname) {
@@ -87,9 +91,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getSurname(fullName) {
         if (!fullName) return '';
-        const parts = fullName.trim().split(' ');
+        
+        let cleanName = fullName.replace(/^(Prof\.|Profa\.|Prof\s|Profa\s|Dr\.|Dra\.|Dr\s|Dra\s|Me\.|Ma\.|Me\s|Ma\s|MSc\.|Esp\.)\s*/gi, '').trim();
+        cleanName = cleanName.replace(/^(Prof\.|Profa\.|Prof\s|Profa\s|Dr\.|Dra\.|Dr\s|Dra\s|Me\.|Ma\.|Me\s|Ma\s|MSc\.|Esp\.)\s*/gi, '').trim();
+        
+        const parts = cleanName.split(' ');
         if (parts.length === 1) return toTitleCase(parts[0]);
-        const last = parts.pop();
+        
+        let last = parts.pop();
+        const suffixes = ['junior', 'júnior', 'filho', 'neto', 'sobrinho'];
+        if (suffixes.includes(last.toLowerCase()) && parts.length > 0) {
+            last = parts.pop() + ' ' + last;
+        }
+        
         return `${toTitleCase(last)}, ${parts.map(p => toTitleCase(p)).join(' ')}`;
     }
 
