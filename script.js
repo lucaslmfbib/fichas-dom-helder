@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const outWorkType = document.getElementById('outWorkType');
     const outCourse = document.getElementById('outCourse');
     const outCity = document.getElementById('outCity');
-    const outYear2 = document.getElementById('outYear2');
     const outKeywordsBlock = document.getElementById('outKeywordsBlock');
     const outCdu = document.getElementById('outCdu');
 
@@ -187,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         outYear.textContent = year.value || 'Ano';
-        outYear2.textContent = year.value || 'Ano';
         
         outPages.textContent = pages.value || '00';
         
