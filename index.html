@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Ficha Catalográfica | Dom Helder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="topbar noprint">
+        <div class="container topbar-content">
+            <div class="logo">
+                <i class="fa-solid fa-book-open-reader"></i>
+                <div>
+                    <h1>Centro Universitário Dom Helder</h1>
+                    <p>Sistema Integrado de Bibliotecas</p>
+                </div>
+            </div>
+            <h2>Gerador de Ficha Catalográfica</h2>
+        </div>
+    </header>
+
+    <main class="container layout noprint-grid">
+        <section class="form-section noprint">
+            <div class="card glass">
+                <h3>Dados do Trabalho Acadêmico</h3>
+                <p class="subtitle">Preencha os campos abaixo para gerar a sua ficha automaticamente.</p>
+                
+                <form id="fichaForm">
+                    
+                    <fieldset>
+                        <legend><i class="fa-regular fa-user"></i> Autor</legend>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="authorName">Nome</label>
+                                <input type="text" id="authorName" placeholder="Ex: João Batista" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="authorSurname">Sobrenome</label>
+                                <input type="text" id="authorSurname" placeholder="Ex: da Silva" required>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend><i class="fa-solid fa-book"></i> Detalhes da Obra</legend>
+                        <div class="form-group">
+                            <label for="title">Título do Trabalho</label>
+                            <input type="text" id="title" placeholder="Ex: A constitucionalidade das políticas públicas" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subtitle">Subtítulo (Opcional)</label>
+                            <input type="text" id="subtitle" placeholder="Ex: um estudo de caso em MG">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">Cidade</label>
+                                <input type="text" id="city" value="Belo Horizonte" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="year">Ano de Defesa</label>
+                                <input type="number" id="year" placeholder="Ex: 2026" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pages">Nº de Folhas</label>
+                                <input type="number" id="pages" placeholder="Ex: 85" required>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend><i class="fa-solid fa-graduation-cap"></i> Dados Acadêmicos</legend>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="workType">Tipo de Trabalho</label>
+                                <select id="workType" required>
+                                    <option value="Trabalho de Conclusão de Curso">Trabalho de Conclusão de Curso (Graduação)</option>
+                                    <option value="Dissertação">Dissertação (Mestrado)</option>
+                                    <option value="Tese">Tese (Doutorado)</option>
+                                    <option value="Monografia">Monografia (Especialização)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="course">Curso / Programa</label>
+                                <input type="text" id="course" placeholder="Ex: Direito" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="advisor">Orientador(a)</label>
+                                <input type="text" id="advisor" placeholder="Nome completo e titulação" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="coadvisor">Coorientador(a) (Opcional)</label>
+                                <input type="text" id="coadvisor" placeholder="Nome completo e titulação">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend><i class="fa-solid fa-tags"></i> Classificação e Assuntos</legend>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cutter">Código Cutter <small>(Automático/Editável)</small></label>
+                                <input type="text" id="cutter" placeholder="Ex: S586a">
+                            </div>
+                            <div class="form-group">
+                                <label for="cdu">CDU <small>(Baseado nos assuntos)</small></label>
+                                <input type="text" id="cdu" placeholder="Ex: 34">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Palavras-chave / Assuntos</label>
+                            <div class="keywords-grid">
+                                <input type="text" id="kw1" placeholder="1º Assunto" required>
+                                <input type="text" id="kw2" placeholder="2º Assunto">
+                                <input type="text" id="kw3" placeholder="3º Assunto">
+                                <input type="text" id="kw4" placeholder="4º Assunto">
+                                <input type="text" id="kw5" placeholder="5º Assunto">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </form>
+            </div>
+        </section>
+
+        <section class="preview-section">
+            <div class="preview-sticky">
+                <div class="preview-header noprint">
+                    <h3>Visualização</h3>
+                    <div class="preview-header-buttons">
+                        <button class="btn-secondary" id="btnWord">
+                            <i class="fa-solid fa-file-word"></i> Baixar Word
+                        </button>
+                        <button class="btn-primary" onclick="window.print()">
+                            <i class="fa-solid fa-file-pdf"></i> Gerar PDF
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="print-container">
+                    <p class="print-instructions noprint">
+                        A ficha abaixo foi gerada nas dimensões oficiais (12,5 cm x 7,5 cm).<br>
+                        Ao clicar em "Gerar PDF", o sistema imprimirá apenas a ficha na página, ideal para anexar ao seu trabalho.
+                    </p>
+                    
+                    <div class="ficha-wrapper">
+                        <!-- Ficha box with standard dimensions -->
+                        <div class="ficha-box" id="fichaBox">
+                            <div class="ficha-content">
+                                <div class="ficha-cutter">
+                                    <span id="outCutter">S586a</span>
+                                </div>
+                                <div class="ficha-body">
+                                    <p class="ficha-author" id="outAuthorFull">Silva, João Batista da</p>
+                                    <p class="ficha-title-block">
+                                        <span id="outTitle">A constitucionalidade das políticas públicas</span><span id="outSubtitle">: um estudo de caso em MG</span> / <span id="outAuthorNormal">João Batista da Silva</span>. – <span id="outYear">2026</span>.
+                                    </p>
+                                    <p class="ficha-pages">
+                                        <span id="outPages">85</span> f. : il.
+                                    </p>
+                                    <p class="ficha-advisor">
+                                        Orientador(a): <span id="outAdvisor">Prof. Dr. Nome do Orientador</span>.
+                                    </p>
+                                    <p class="ficha-coadvisor" id="outCoadvisorBlock">
+                                        Coorientador(a): <span id="outCoadvisor">Prof. Me. Nome do Coorientador</span>.
+                                    </p>
+                                    <p class="ficha-worktype">
+                                        <span id="outWorkType">Trabalho de Conclusão de Curso</span> – Centro Universitário Dom Helder, <span id="outCourse">Direito</span>, <span id="outCity">Belo Horizonte</span>, <span id="outYear2">2026</span>.
+                                    </p>
+                                    <p class="ficha-keywords">
+                                        <span id="outKeywords">1. Políticas Públicas. 2. Direito Constitucional.</span> I. <span id="outAdvisorSurname">Sobrenome Orientador, Nome</span>. II. Centro Universitário Dom Helder. III. Título.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="ficha-footer">
+                                <span class="cdu-label">CDU:</span>
+                                <span id="outCdu">34</span>
+                            </div>
+                        </div>
+                        <div class="librarian-info">
+                            Bibliotecário Responsável: Lucas Martins de Freitas Junior - CRB 6-3621
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="noprint">
+        <div class="container">
+            <p>&copy; 2026 Centro Universitário Dom Helder - Sistema de Bibliotecas. Desenvolvido para facilitar a vida acadêmica.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
