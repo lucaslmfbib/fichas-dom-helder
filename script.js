@@ -35,8 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const outCourse = document.getElementById('outCourse');
     const outCity = document.getElementById('outCity');
     const outYear2 = document.getElementById('outYear2');
-    const outKeywords = document.getElementById('outKeywords');
-    const outAdvisorSurname = document.getElementById('outAdvisorSurname');
+    const outKeywordsBlock = document.getElementById('outKeywordsBlock');
     const outCdu = document.getElementById('outCdu');
 
     // Mapeamento básico CDU
@@ -206,7 +205,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (kwString === '') {
             kwString = '1. Assunto principal. ';
         }
-        outKeywords.textContent = kwString.trim();
+        
+        let romanCount = 1;
+        const romans = ['I', 'II', 'III', 'IV', 'V'];
+        let romanStr = `${romans[romanCount-1]}. ${getSurname(advisor.value || 'Nome do Orientador')}. `;
+        romanCount++;
+        
+        if (coadvisor.value.trim() !== '') {
+            romanStr += `${romans[romanCount-1]}. ${getSurname(coadvisor.value)}. `;
+            romanCount++;
+        }
+        
+        romanStr += `${romans[romanCount-1]}. Centro Universitário Dom Helder. ${romans[romanCount]}. Título.`;
+        
+        if (outKeywordsBlock) {
+            outKeywordsBlock.innerHTML = `<span>${kwString.trim()}</span> ${romanStr}`;
+        }
 
         // Autogerar Cutter
         if (!userEditedCutter && authorSurname.value && title.value) {
@@ -226,12 +240,8 @@ document.addEventListener('DOMContentLoaded', () => {
         outCutter.textContent = cutter.value || '';
         outCdu.textContent = cdu.value || '';
         
-        // Advisor in roman numerals at the end
-        if (advisor.value.trim() !== '') {
-            outAdvisorSurname.textContent = getSurname(advisor.value);
-        } else {
-            outAdvisorSurname.textContent = 'Sobrenome Orientador, Nome';
-        }
+        outCutter.textContent = cutter.value || '';
+        outCdu.textContent = cdu.value || '';
     }
 
     // Gerar Word
@@ -316,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         
                         <div class="indent-normal" style="margin-top: 0.2cm;">
-                            ${outKeywords.textContent} I. ${outAdvisorSurname.textContent}. II. Centro Universitário Dom Helder. III. Título.
+                            ${outKeywordsBlock ? outKeywordsBlock.innerHTML : ''}
                         </div>
                     </div>
                     
