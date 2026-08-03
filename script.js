@@ -66,12 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let userEditedCutter = false;
     let userEditedCdu = false;
 
-    cutter.addEventListener('input', () => userEditedCutter = true);
-    cdu.addEventListener('input', () => userEditedCdu = true);
+    cutter.addEventListener('change', () => userEditedCutter = true);
+    cdu.addEventListener('change', () => userEditedCdu = true);
+
+    function toTitleCase(str) {
+        return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+    }
 
     function formatBibliographicName(name, surname) {
-        let n = name.trim();
-        let s = surname.trim().toUpperCase();
+        let n = toTitleCase(name.trim());
+        let s = toTitleCase(surname.trim());
         if (!n && !s) return 'Sobrenome, Nome';
         if (!s) return n;
         if (!n) return s;
@@ -81,9 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function getSurname(fullName) {
         if (!fullName) return '';
         const parts = fullName.trim().split(' ');
-        if (parts.length === 1) return parts[0].toUpperCase();
+        if (parts.length === 1) return toTitleCase(parts[0]);
         const last = parts.pop();
-        return `${last.toUpperCase()}, ${parts.join(' ')}`;
+        return `${toTitleCase(last)}, ${parts.map(p => toTitleCase(p)).join(' ')}`;
     }
 
     function generateCutter(surname, title) {
@@ -292,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="ficha-author">${outAuthorFull.textContent}</div>
                         
                         <div class="indent">
-                            ${outTitle.textContent}${outSubtitle.textContent} / ${outAuthorNormal.textContent}. – ${outYear.textContent}.
+                            ${outTitle.textContent}${outSubtitle.textContent} / ${outAuthorNormal.textContent}. – ${outCity.textContent} : Centro Universitário Dom Helder, ${outYear.textContent}.
                         </div>
                         
                         <div class="indent-normal">
@@ -308,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>` : ''}
                         
                         <div class="indent-normal">
-                            ${outWorkType.textContent} – Centro Universitário Dom Helder, ${outCourse.textContent}, ${outCity.textContent}, ${outYear2.textContent}.
+                            ${outWorkType.textContent} em ${outCourse.textContent}.
                         </div>
                         
                         <div class="indent-normal" style="margin-top: 0.2cm;">
