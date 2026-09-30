@@ -371,6 +371,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Copiar para Área de Transferência
+    const btnCopy = document.getElementById('btnCopy');
+    if (btnCopy) {
+        btnCopy.addEventListener('click', () => {
+            const fichaBox = document.getElementById('fichaBox');
+            if (!fichaBox) return;
+            
+            try {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(fichaBox);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                document.execCommand('copy');
+                selection.removeAllRanges();
+                
+                const originalHTML = btnCopy.innerHTML;
+                btnCopy.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!';
+                setTimeout(() => {
+                    btnCopy.innerHTML = originalHTML;
+                }, 2000);
+            } catch (err) {
+                console.error('Falha ao copiar', err);
+                alert('Não foi possível copiar automaticamente. Selecione a ficha e copie manualmente (Ctrl+C).');
+            }
+        });
+    }
+
     // Attach event listeners
     const formElements = document.querySelectorAll('#fichaForm input, #fichaForm select');
     formElements.forEach(el => {
