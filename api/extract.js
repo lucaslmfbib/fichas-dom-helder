@@ -84,7 +84,7 @@ Estrutura JSON:
 
         prompt += `\n\nNão preencha se não encontrar. Use null em 'val' caso falte.\n\nTexto a ser analisado:\n"""\n${text.substring(0, 20000)}\n"""`;
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
