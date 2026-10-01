@@ -293,11 +293,19 @@ input:focus, select:focus {
     box-shadow: var(--shadow);
 }
 
-.librarian-info {
-    margin-top: 1rem;
-    font-size: 0.85rem;
-    color: var(--text-muted);
+.cip-title {
     text-align: center;
+    font-size: 10pt;
+    font-weight: 600;
+    margin-bottom: 0.2cm;
+    font-family: 'Times New Roman', Times, serif;
+    color: #000;
+}
+
+.librarian-info {
+    font-size: 8pt;
+    color: #000;
+    text-align: left;
 }
 
 .ficha-box {
@@ -329,43 +337,31 @@ input:focus, select:focus {
 
 .ficha-body {
     flex: 1;
-    text-align: justify;
+    text-align: left;
 }
 
 .ficha-author {
     margin-bottom: 0.3cm;
 }
 
-.ficha-title-block, .ficha-pages, .ficha-advisor, .ficha-coadvisor, .ficha-worktype {
+.ficha-title-block, .ficha-pages, .ficha-advisor, .ficha-coadvisor, .ficha-worktype, .ficha-keywords {
     margin-bottom: 0.15cm;
     text-indent: 1.5cm; /* Standard indentation for AACR2 */
-}
-
-/* Forcing continuous text for title block instead of indentation trick if needed, but standard is text-indent on the block */
-.ficha-title-block {
-    text-indent: 0;
-    margin-left: 1.5cm; /* standard paragraph indent */
-    text-indent: -1.5cm;
-}
-
-.ficha-pages {
-    margin-left: 1.5cm;
-}
-
-.ficha-advisor, .ficha-coadvisor, .ficha-worktype, .ficha-keywords {
-    margin-left: 1.5cm;
-}
-
-
-.ficha-keywords {
-    margin-top: 0.2cm;
+    margin-left: 0;
 }
 
 .ficha-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: flex-end;
     font-size: 10pt;
     margin-top: auto;
+    border-top: 1px solid transparent; /* Just for spacing if needed */
+    padding-top: 0.2cm;
+}
+
+.cdu-container {
+    text-align: right;
 }
 
 .cdu-label {

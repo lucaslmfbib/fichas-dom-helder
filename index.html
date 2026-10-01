@@ -7,8 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=9">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -148,6 +149,9 @@
                         <button class="btn-secondary" id="btnWord">
                             <i class="fa-solid fa-file-word"></i> Baixar Word
                         </button>
+                        <button class="btn-secondary" id="btnPng" style="background-color: #f59e0b; color: white; border-color: #f59e0b;" onmouseover="this.style.backgroundColor='#d97706'" onmouseout="this.style.backgroundColor='#f59e0b'">
+                            <i class="fa-solid fa-image"></i> Baixar PNG
+                        </button>
                         <button class="btn-secondary" id="btnCopy" style="background-color: #10b981; color: white; border-color: #10b981;" onmouseover="this.style.backgroundColor='#059669'" onmouseout="this.style.backgroundColor='#10b981'">
                             <i class="fa-solid fa-copy"></i> Copiar
                         </button>
@@ -162,9 +166,12 @@
                         A ficha abaixo foi gerada nas dimensões oficiais (12,5 cm x 7,5 cm).<br>
                         Ao clicar em "Gerar PDF", o sistema imprimirá apenas a ficha na página, ideal para anexar ao seu trabalho.
                     </p>
+                    <div id="overflowAlert" class="alert-warning noprint" style="display:none; background-color: #fef2f2; border-left: 4px solid #ef4444; color: #b91c1c; padding: 10px; margin-bottom: 15px; font-size: 0.85rem; border-radius: 4px;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <strong>Atenção:</strong> O conteúdo da ficha excedeu o tamanho oficial de 12,5 x 7,5 cm. Por favor, resuma o título, reduza a quantidade de palavras-chave ou abrevie o nome dos orientadores para evitar cortes.
+                    </div>
                     
-                    <div class="ficha-wrapper">
-                        <!-- Ficha box with standard dimensions -->
+                    <div class="ficha-wrapper" id="fichaCaptureTarget">
+                        <div class="cip-title">Dados Internacionais de Catalogação na Publicação (CIP)</div>
                         <div class="ficha-box" id="fichaBox">
                             <div class="ficha-content">
                                 <div class="ficha-cutter">
@@ -173,18 +180,18 @@
                                 <div class="ficha-body">
                                     <p class="ficha-author" id="outAuthorFull">Silva, João Batista da</p>
                                     <p class="ficha-title-block">
-                                        <span id="outTitle">A constitucionalidade das políticas públicas</span><span id="outSubtitle">: um estudo de caso em MG</span> / <span id="outAuthorNormal">João Batista da Silva</span>. – <span id="outCity">Belo Horizonte</span> : Centro Universitário Dom Helder, <span id="outYear">2026</span>.
+                                        <span id="outTitle">A constitucionalidade das políticas públicas</span><span id="outSubtitle" style="display:none;"></span> / <span id="outAuthorNormal">João Batista da Silva</span>. – <span id="outCity">Belo Horizonte</span> : Centro Universitário Dom Helder, <span id="outYear">2026</span>.
                                     </p>
-                                    <p class="ficha-pages">
+                                    <p class="ficha-pages" id="outPagesBlock">
                                         <span id="outPages">85</span> f. : il.
                                     </p>
-                                    <p class="ficha-advisor">
+                                    <p class="ficha-advisor" id="outAdvisorBlock">
                                         Orientador(a): <span id="outAdvisor">Prof. Dr. Nome do Orientador</span>.
                                     </p>
                                     <p class="ficha-coadvisor" id="outCoadvisorBlock" style="display: none;">
                                         Coorientador(a): <span id="outCoadvisor"></span>.
                                     </p>
-                                    <p class="ficha-worktype">
+                                    <p class="ficha-worktype" id="outWorkTypeBlock">
                                         <span id="outWorkType">Trabalho de Conclusão de Curso</span> em <span id="outCourse">Direito</span>.
                                     </p>
                                     <p class="ficha-keywords" id="outKeywordsBlock">
@@ -192,12 +199,14 @@
                                 </div>
                             </div>
                             <div class="ficha-footer">
-                                <span class="cdu-label">CDU:</span>
-                                <span id="outCdu">34</span>
+                                <div class="librarian-info">
+                                    Bibliotecário Responsável: Lucas Martins de Freitas Junior - CRB 6-3621
+                                </div>
+                                <div class="cdu-container">
+                                    <span class="cdu-label">CDU:</span>
+                                    <span id="outCdu">34</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="librarian-info">
-                            Bibliotecário Responsável: Lucas Martins de Freitas Junior - CRB 6-3621
                         </div>
                     </div>
                 </div>

@@ -258,6 +258,19 @@ document.addEventListener('DOMContentLoaded', () => {
         
         outCutter.textContent = cutter.value || '';
         outCdu.textContent = cdu.value || '';
+        
+        // Overflow check
+        setTimeout(() => {
+            const fBox = document.getElementById('fichaBox');
+            const alertBox = document.getElementById('overflowAlert');
+            if (fBox && alertBox) {
+                if (fBox.scrollHeight > fBox.clientHeight) {
+                    alertBox.style.display = 'block';
+                } else {
+                    alertBox.style.display = 'none';
+                }
+            }
+        }, 100);
     }
 
     // Gerar Word
@@ -270,89 +283,86 @@ document.addEventListener('DOMContentLoaded', () => {
                 <meta charset='utf-8'>
                 <title>Ficha Catalográfica</title>
                 <style>
-                    body {
-                        font-family: 'Times New Roman', Times, serif;
-                    }
-                    .ficha-box {
+                    body { font-family: 'Times New Roman', Times, serif; }
+                    .ficha-table {
                         width: 12.5cm;
                         height: 7.5cm;
                         border: 1px solid black;
-                        padding: 0.8cm 1cm 0.5cm 1cm;
+                        border-collapse: collapse;
                         font-size: 12pt;
-                        line-height: 1;
                     }
-                    .ficha-cutter {
-                        float: left;
+                    .ficha-table td {
+                        padding: 0.5cm 0.8cm;
+                        vertical-align: top;
+                    }
+                    .col-cutter {
                         width: 1.5cm;
-                        margin-top: 1.2em;
+                        padding-right: 0;
                     }
-                    .ficha-body {
-                        margin-left: 1.5cm;
-                        text-align: justify;
-                    }
-                    .ficha-author {
-                        margin-bottom: 0.3cm;
+                    .col-body {
+                        text-align: left;
                     }
                     .indent {
-                        margin-left: 1.5cm;
-                        text-indent: -1.5cm;
+                        text-indent: 1.5cm;
+                        margin: 0;
                         margin-bottom: 0.15cm;
                     }
-                    .indent-normal {
-                        margin-left: 1.5cm;
-                        margin-bottom: 0.15cm;
-                    }
-                    .ficha-footer {
-                        text-align: right;
-                        margin-top: 1cm;
-                    }
-                    .librarian-info {
-                        text-align: center;
+                    .footer-table {
+                        width: 100%;
+                        margin-top: 0.5cm;
                         font-size: 9pt;
-                        margin-top: 1cm;
                     }
                 </style>
             </head>
             <body>
-                <div class="ficha-box">
-                    <div class="ficha-cutter">
-                        ${outCutter.textContent}
-                    </div>
-                    <div class="ficha-body">
-                        <div class="ficha-author">${outAuthorFull.textContent}</div>
-                        
-                        <div class="indent">
-                            ${outTitle.textContent}${outSubtitle.textContent} / ${outAuthorNormal.textContent}. – ${outCity.textContent} : Centro Universitário Dom Helder, ${outYear.textContent}.
-                        </div>
-                        
-                        <div class="indent-normal">
-                            ${outPages.textContent} f. : il.
-                        </div>
-                        
-                        <div class="indent-normal">
-                            Orientador(a): ${outAdvisor.textContent}.
-                        </div>
-                        ${outCoadvisorBlock.style.display !== 'none' ? `
-                        <div class="indent-normal">
-                            Coorientador(a): ${outCoadvisor.textContent}.
-                        </div>` : ''}
-                        
-                        <div class="indent-normal">
-                            ${outWorkType.textContent} em ${outCourse.textContent}.
-                        </div>
-                        
-                        <div class="indent-normal" style="margin-top: 0.2cm;">
-                            ${outKeywordsBlock ? outKeywordsBlock.innerHTML : ''}
-                        </div>
-                    </div>
-                    
-                    <div class="ficha-footer">
-                        CDU: ${outCdu.textContent}
-                    </div>
+                <div style="text-align: center; width: 12.5cm; font-size: 10pt; font-weight: bold; margin-bottom: 0.2cm;">
+                    Dados Internacionais de Catalogação na Publicação (CIP)
                 </div>
-                <div class="librarian-info">
-                    Bibliotecário Responsável: Lucas Martins de Freitas Junior - CRB 6-3621
-                </div>
+                <table class="ficha-table">
+                    <tr>
+                        <td class="col-cutter">
+                            <div style="margin-top: 1em;">${outCutter.textContent}</div>
+                        </td>
+                        <td class="col-body">
+                            <div style="margin-bottom: 0.3cm;">${outAuthorFull.textContent}</div>
+                            
+                            <p class="indent">
+                                ${outTitle.textContent}${outSubtitle.style.display !== 'none' ? outSubtitle.textContent : ''} / ${outAuthorNormal.textContent}. – ${outCity.textContent} : Centro Universitário Dom Helder, ${outYear.textContent}.
+                            </p>
+                            
+                            <p class="indent">
+                                ${outPages.textContent} f. : il.
+                            </p>
+                            
+                            <p class="indent">
+                                Orientador(a): ${outAdvisor.textContent}.
+                            </p>
+                            ${outCoadvisorBlock.style.display !== 'none' ? `
+                            <p class="indent">
+                                Coorientador(a): ${outCoadvisor.textContent}.
+                            </p>` : ''}
+                            
+                            <p class="indent">
+                                ${outWorkType.textContent} em ${outCourse.textContent}.
+                            </p>
+                            
+                            <p class="indent" style="margin-top: 0.2cm;">
+                                ${outKeywordsBlock ? outKeywordsBlock.innerHTML : ''}
+                            </p>
+                            
+                            <table class="footer-table">
+                                <tr>
+                                    <td style="text-align: left; font-size: 8pt; vertical-align: bottom;">
+                                        Bibliotecário Responsável: Lucas Martins de Freitas Junior - CRB 6-3621
+                                    </td>
+                                    <td style="text-align: right; font-size: 10pt; vertical-align: bottom;">
+                                        CDU: ${outCdu.textContent}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
             </body>
             </html>
             `;
@@ -375,13 +385,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCopy = document.getElementById('btnCopy');
     if (btnCopy) {
         btnCopy.addEventListener('click', () => {
-            const fichaBox = document.getElementById('fichaBox');
-            if (!fichaBox) return;
+            const target = document.getElementById('fichaCaptureTarget');
+            if (!target) return;
             
             try {
                 const selection = window.getSelection();
                 const range = document.createRange();
-                range.selectNodeContents(fichaBox);
+                range.selectNodeContents(target);
                 selection.removeAllRanges();
                 selection.addRange(range);
                 document.execCommand('copy');
@@ -396,6 +406,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Falha ao copiar', err);
                 alert('Não foi possível copiar automaticamente. Selecione a ficha e copie manualmente (Ctrl+C).');
             }
+        });
+    }
+
+    // Gerar PNG
+    const btnPng = document.getElementById('btnPng');
+    if (btnPng) {
+        btnPng.addEventListener('click', () => {
+            const target = document.getElementById('fichaCaptureTarget');
+            if (!target) return;
+            
+            const originalBackground = target.style.backgroundColor;
+            target.style.backgroundColor = '#ffffff';
+            
+            html2canvas(target, {
+                backgroundColor: '#ffffff',
+                scale: 2
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Ficha_Catalografica.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                target.style.backgroundColor = originalBackground;
+            }).catch(err => {
+                console.error('Falha ao gerar PNG', err);
+                alert('Houve um erro ao tentar gerar o arquivo PNG.');
+            });
         });
     }
 
