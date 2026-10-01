@@ -8,30 +8,47 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Nenhum texto fornecido para análise.' });
     }
 
-    // Verifica a chave da API (GEMINI_API_KEY)
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
         return res.status(500).json({ 
             error: 'Configuração ausente', 
-            details: 'A chave de API de Inteligência Artificial (GEMINI_API_KEY) não está configurada no servidor Vercel. Adicione-a nas variáveis de ambiente do projeto para habilitar a extração automatizada.' 
+            details: 'A chave de API (GEMINI_API_KEY) não está configurada no Vercel.' 
         });
     }
 
     try {
-        const prompt = `Extraia as seguintes informações do texto acadêmico fornecido (normalmente composto de capa, folha de rosto, aprovação e resumo). Retorne APENAS um JSON estrito válido com as seguintes chaves (use null se a informação não for encontrada de forma clara, não invente):
-- autor_nome (Primeiro nome e nomes do meio do autor)
-- autor_sobrenome (Último sobrenome do autor)
-- titulo (Título principal do trabalho)
-- subtitulo (Subtítulo do trabalho, se houver)
-- instituicao (Nome da instituição de ensino)
-- curso (Curso ou programa acadêmico, ex: Direito, Engenharia)
-- tipo_trabalho (Ex: Trabalho de Conclusão de Curso, Dissertação, Tese, Monografia)
-- orientador (Nome completo do orientador com titulação)
-- coorientador (Nome completo do coorientador com titulação)
-- cidade (Cidade onde foi defendido/publicado)
-- ano (Ano da defesa ou publicação, 4 dígitos)
-- palavras_chave (Array de strings com as palavras-chave ou assuntos)
-- paginas (Inteiro, número total de folhas estimadas se encontrado no texto, caso contrário retorne ${totalPages || 'null'})
+        const prompt = `Analise o texto extraído de um trabalho acadêmico (contendo capa, folha de rosto, etc).
+Sua tarefa é extrair os dados bibliográficos de forma precisa e lidar com divergências (ex: título na capa vs título na folha de rosto).
+
+Retorne APENAS um JSON válido. Para cada campo, você deve retornar um objeto com o formato:
+{ "val": "o valor extraído formatado", "source": "o trecho exato e literal do texto de onde você tirou essa informação (para o usuário conferir)" }
+
+Regras específicas:
+- autor_nome: Nome completo do autor, EXCLUINDO o último sobrenome. 
+- autor_sobrenome: Apenas o ÚLTIMO sobrenome (ou composto, ex: "da Silva").
+- titulo: Título principal. Reconheça títulos que estão em várias linhas, unindo com espaço. Se o título na capa for diferente da folha de rosto, escolha o mais completo e avise no 'source'.
+- subtitulo: Identifique o subtítulo (geralmente após dois-pontos ou separado visualmente). Não confunda quebra de linha com subtítulo. Se não houver, retorne val como nulo.
+- palavras_chave: Deve ser um array de strings no 'val', e a string original inteira no 'source'.
+- paginas: Número total de páginas/folhas (descontando se puder inferir, ou use ${totalPages || 'null'}).
+
+Estrutura JSON Esperada:
+{
+  "autor_nome": { "val": "", "source": "" },
+  "autor_sobrenome": { "val": "", "source": "" },
+  "titulo": { "val": "", "source": "" },
+  "subtitulo": { "val": null, "source": "" },
+  "instituicao": { "val": "", "source": "" },
+  "curso": { "val": "", "source": "" },
+  "tipo_trabalho": { "val": "", "source": "" },
+  "orientador": { "val": "", "source": "" },
+  "coorientador": { "val": null, "source": "" },
+  "cidade": { "val": "", "source": "" },
+  "ano": { "val": "", "source": "" },
+  "palavras_chave": { "val": [], "source": "" },
+  "paginas": { "val": "", "source": "" }
+}
+
+Não preencha se não encontrar. Use null em 'val' caso falte.
 
 Texto a ser analisado:
 """
@@ -50,7 +67,7 @@ ${text.substring(0, 20000)}
         const data = await response.json();
         
         if (!response.ok) {
-            throw new Error(data.error?.message || 'Erro de resposta da API do Gemini');
+            throw new Error(data.error?.message || 'Erro na API do Gemini');
         }
 
         const jsonText = data.candidates[0].content.parts[0].text;
@@ -60,6 +77,6 @@ ${text.substring(0, 20000)}
 
     } catch (error) {
         console.error('Extract error:', error);
-        return res.status(500).json({ error: 'Falha ao processar os dados com IA', details: error.message });
+        return res.status(500).json({ error: 'Falha na Inteligência Artificial', details: error.message });
     }
 }
