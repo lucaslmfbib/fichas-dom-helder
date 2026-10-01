@@ -34,10 +34,27 @@
                 <h3>Dados do Trabalho Acadêmico</h3>
                 <p class="subtitle">Preencha manualmente ou importe seu arquivo (PDF/DOCX) para auto-preenchimento.</p>
                 
+                <div class="material-type-selector noprint" style="display: flex; gap: 15px; margin-bottom: 20px;">
+                    <label class="radio-card" style="flex:1; border: 2px solid #e2e8f0; border-radius: 8px; padding: 15px; cursor: pointer; text-align: center; transition: all 0.3s;" id="lblAcademic">
+                        <input type="radio" name="materialType" value="academic" checked style="display: none;">
+                        <div class="radio-content">
+                            <i class="fa-solid fa-graduation-cap" style="font-size: 1.5rem; margin-bottom: 5px; color: var(--primary);"></i>
+                            <span style="display: block; font-weight: 500;">Trabalho Acadêmico</span>
+                        </div>
+                    </label>
+                    <label class="radio-card" style="flex:1; border: 2px solid #e2e8f0; border-radius: 8px; padding: 15px; cursor: pointer; text-align: center; transition: all 0.3s;" id="lblBook">
+                        <input type="radio" name="materialType" value="book" style="display: none;">
+                        <div class="radio-content">
+                            <i class="fa-solid fa-book" style="font-size: 1.5rem; margin-bottom: 5px; color: #64748b;"></i>
+                            <span style="display: block; font-weight: 500; color: #64748b;">Livro</span>
+                        </div>
+                    </label>
+                </div>
+
                 <div class="import-section noprint">
                     <div class="dropzone" id="dropzone">
                         <i class="fa-solid fa-file-import"></i>
-                        <p><strong>Importar Trabalho (Auto-preenchimento)</strong></p>
+                        <p><strong>Importar Documento (Auto-preenchimento)</strong></p>
                         <p class="dropzone-sub">Arraste seu PDF ou DOCX aqui, ou clique para selecionar</p>
                         <input type="file" id="fileInput" accept=".pdf, .docx, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display: none;">
                     </div>
@@ -50,24 +67,37 @@
                 
                 <form id="fichaForm">
                     
-                    <fieldset>
-                        <legend><i class="fa-regular fa-user"></i> Autor</legend>
+                    <fieldset id="fsAuthorAcademic">
+                        <legend><i class="fa-regular fa-user"></i> Autor Principal</legend>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="authorName">Nome</label>
-                                <input type="text" id="authorName" placeholder="Ex: João Batista" required>
+                                <input type="text" id="authorName" placeholder="Ex: João Batista">
                             </div>
                             <div class="form-group">
                                 <label for="authorSurname">Último Nome</label>
-                                <input type="text" id="authorSurname" placeholder="Ex: da Silva" required>
+                                <input type="text" id="authorSurname" placeholder="Ex: da Silva">
                             </div>
                         </div>
+                    </fieldset>
+
+                    <fieldset id="fsAuthorBook" style="display: none;">
+                        <legend><i class="fa-solid fa-users"></i> Autoria e Responsabilidade (Livros)</legend>
+                        <div id="bookAuthorsContainer">
+                            <!-- Dynamic Authors go here -->
+                        </div>
+                        <button type="button" id="btnAddBookAuthor" class="btn-secondary" style="margin-bottom: 15px; padding: 6px 12px; font-size: 0.85rem;"><i class="fa-solid fa-plus"></i> Adicionar Autor</button>
+                        
+                        <div id="bookRespContainer">
+                            <!-- Outras responsabilidades (Organizador, Tradutor, Ilustrador) -->
+                        </div>
+                        <button type="button" id="btnAddBookResp" class="btn-secondary" style="margin-bottom: 5px; padding: 6px 12px; font-size: 0.85rem;"><i class="fa-solid fa-plus"></i> Adicionar Responsabilidade (Org, Trad, etc)</button>
                     </fieldset>
 
                     <fieldset>
                         <legend><i class="fa-solid fa-book"></i> Detalhes da Obra</legend>
                         <div class="form-group">
-                            <label for="title">Título do Trabalho</label>
+                            <label for="title">Título Principal</label>
                             <input type="text" id="title" placeholder="Ex: A constitucionalidade das políticas públicas" required>
                         </div>
                         <div class="form-group">
@@ -76,41 +106,41 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="city">Cidade</label>
+                                <label for="city">Local de Publicação / Defesa</label>
                                 <input type="text" id="city" value="Belo Horizonte" required>
                             </div>
                             <div class="form-group">
-                                <label for="year">Ano de Defesa</label>
+                                <label for="year">Ano</label>
                                 <input type="number" id="year" placeholder="Ex: 2026" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="pages">Nº de Folhas</label>
-                                <input type="number" id="pages" placeholder="Ex: 85" required>
                             </div>
                         </div>
                     </fieldset>
 
-                    <fieldset>
+                    <fieldset id="fsAcademicData">
                         <legend><i class="fa-solid fa-graduation-cap"></i> Dados Acadêmicos</legend>
                         <div class="form-row">
                             <div class="form-group">
+                                <label for="pagesAcademic">Nº de Folhas</label>
+                                <input type="number" id="pagesAcademic" placeholder="Ex: 85">
+                            </div>
+                            <div class="form-group">
                                 <label for="workType">Tipo de Trabalho</label>
-                                <select id="workType" required>
+                                <select id="workType">
                                     <option value="Trabalho de Conclusão de Curso">Trabalho de Conclusão de Curso (Graduação)</option>
                                     <option value="Dissertação">Dissertação (Mestrado)</option>
                                     <option value="Tese">Tese (Doutorado)</option>
                                     <option value="Monografia">Monografia (Especialização)</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="course">Curso / Programa</label>
-                                <input type="text" id="course" placeholder="Ex: Direito" required>
-                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="course">Curso / Programa</label>
+                            <input type="text" id="course" placeholder="Ex: Direito">
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="advisor">Orientador(a)</label>
-                                <input type="text" id="advisor" placeholder="Nome completo e titulação" required>
+                                <input type="text" id="advisor" placeholder="Nome completo e titulação">
                             </div>
                             <div class="form-group">
                                 <label for="coadvisor">Coorientador(a) (Opcional)</label>
@@ -119,11 +149,71 @@
                         </div>
                     </fieldset>
 
+                    <fieldset id="fsBookData" style="display: none;">
+                        <legend><i class="fa-solid fa-bookmark"></i> Edição e Publicação (Livros)</legend>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bookEdition">Edição</label>
+                                <input type="text" id="bookEdition" placeholder="Ex: 2. ed.">
+                            </div>
+                            <div class="form-group">
+                                <label for="bookPublisher">Editora</label>
+                                <input type="text" id="bookPublisher" placeholder="Ex: Saraiva">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bookPages">Páginas/Volumes</label>
+                                <input type="text" id="bookPages" placeholder="Ex: 250 p.">
+                            </div>
+                            <div class="form-group">
+                                <label for="bookPhysical">Ilustrações (Físico)</label>
+                                <input type="text" id="bookPhysical" placeholder="Ex: il., color.">
+                            </div>
+                            <div class="form-group">
+                                <label for="bookDimensions">Dimensões</label>
+                                <input type="text" id="bookDimensions" placeholder="Ex: 23 cm">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bookSeries">Série ou Coleção</label>
+                                <input type="text" id="bookSeries" placeholder="Ex: (Coleção Saberes ; v. 2)">
+                            </div>
+                            <div class="form-group">
+                                <label for="bookSupport">Suporte</label>
+                                <select id="bookSupport">
+                                    <option value="impresso">Impresso</option>
+                                    <option value="digital">Digital (E-book)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="bookIsbnContainer" style="margin-top: 10px;">
+                            <!-- Dynamic ISBNs -->
+                        </div>
+                        <button type="button" id="btnAddIsbn" class="btn-secondary" style="margin-bottom: 15px; padding: 6px 12px; font-size: 0.85rem;"><i class="fa-solid fa-plus"></i> Adicionar ISBN</button>
+
+                        <div class="form-group">
+                            <label for="bookNotes">Notas (Opcional)</label>
+                            <textarea id="bookNotes" rows="2" placeholder="Ex: Inclui bibliografia."></textarea>
+                        </div>
+                    </fieldset>
+
                     <fieldset>
                         <legend><i class="fa-solid fa-tags"></i> Classificação e Assuntos</legend>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="cutter">Código Cutter <small>(Automático/Editável)</small></label>
+                                <label for="mainEntry">Entrada Principal <small>(Base do Cutter)</small></label>
+                                <select id="mainEntry">
+                                    <option value="author" selected>Autor</option>
+                                    <option value="title">Título</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cutter">Código Cutter <small>(Editável)</small></label>
                                 <input type="text" id="cutter" placeholder="Ex: S586a">
                                 <div style="margin-top: 6px; font-size: 0.85rem;">
                                     <a href="https://www.tabelacutter.com/" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: none; font-weight: 500;">
@@ -132,13 +222,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cdu">CDU <small>(Baseado nos assuntos)</small></label>
+                                <label for="cdu">CDU</label>
                                 <input type="text" id="cdu" placeholder="Ex: 34">
                                 <div style="margin-top: 6px; font-size: 0.85rem;">
                                     <a href="https://chatgpt.com/g/g-aRoV9YUeG-biblio-chat-cdu" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: none; font-weight: 500;">
-                                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Descobrir CDU no Biblio Chat
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Biblio Chat CDU
                                     </a>
                                 </div>
+                            </div>
+                            <div class="form-group" id="cddGroup" style="display: none;">
+                                <label for="cdd">CDD <small>(Para Livros)</small></label>
+                                <input type="text" id="cdd" placeholder="Ex: 340">
                             </div>
                         </div>
                         <div class="form-group">
@@ -261,7 +355,8 @@
         </div>
     </div>
 
-    <script src="extractor.js?v=1"></script>
-    <script src="script.js?v=9"></script>
+    <script src="cutter.js?v=1"></script>
+    <script src="extractor.js?v=2"></script>
+    <script src="script.js?v=10"></script>
 </body>
 </html>

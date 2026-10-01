@@ -117,10 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
         importLoading.innerHTML = '<i class="fa-solid fa-microchip fa-fade"></i> Inteligência Artificial Extraindo e Conciliando Dados...';
         
         try {
+            const materialType = document.querySelector('input[name="materialType"]:checked').value;
+            
             const response = await fetch('/api/extract', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, totalPages })
+                body: JSON.stringify({ text, totalPages, materialType })
             });
 
             const data = await response.json();
@@ -146,7 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function processExtractedData(data) {
+        const materialType = document.querySelector('input[name="materialType"]:checked').value;
+        
         extractedData = {
+            materialType: materialType,
             authorName: data.autor_nome || { val: null, source: '' },
             authorSurname: data.autor_sobrenome || { val: null, source: '' },
             title: data.titulo || { val: null, source: '' },
@@ -158,7 +163,11 @@ document.addEventListener('DOMContentLoaded', () => {
             course: data.curso || { val: null, source: '' },
             advisor: data.orientador || { val: null, source: '' },
             coadvisor: data.coorientador || { val: null, source: '' },
-            kws: data.palavras_chave || { val: null, source: '' }
+            kws: data.palavras_chave || { val: null, source: '' },
+            // Book fields
+            publisher: data.editora || { val: null, source: '' },
+            edition: data.edicao || { val: null, source: '' },
+            isbn: data.isbn || { val: null, source: '' }
         };
 
         buildReviewModal();
@@ -179,18 +188,28 @@ document.addEventListener('DOMContentLoaded', () => {
             </thead>
             <tbody>`;
 
-        const fieldsToMap = [
+        const fieldsToMap = extractedData.materialType === 'academic' ? [
             { id: 'authorName', name: 'Nome do Autor', inputId: 'authorName' },
             { id: 'authorSurname', name: 'Último Sobrenome', inputId: 'authorSurname' },
             { id: 'title', name: 'Título Principal', inputId: 'title' },
             { id: 'subtitle', name: 'Subtítulo', inputId: 'subtitle' },
             { id: 'city', name: 'Cidade', inputId: 'city' },
-            { id: 'year', name: 'Ano de Defesa', inputId: 'year' },
-            { id: 'pages', name: 'Nº de Folhas', inputId: 'pages' },
+            { id: 'year', name: 'Ano de Publicação/Defesa', inputId: 'year' },
+            { id: 'pages', name: 'Nº de Folhas', inputId: 'pagesAcademic' },
             { id: 'workType', name: 'Tipo de Trabalho', inputId: 'workType' },
             { id: 'course', name: 'Curso / Programa', inputId: 'course' },
             { id: 'advisor', name: 'Orientador', inputId: 'advisor' },
             { id: 'coadvisor', name: 'Coorientador', inputId: 'coadvisor' }
+        ] : [
+            { id: 'authorName', name: 'Nome do Autor Principal', inputId: null },
+            { id: 'authorSurname', name: 'Sobrenome do Autor', inputId: null },
+            { id: 'title', name: 'Título Principal', inputId: 'title' },
+            { id: 'subtitle', name: 'Subtítulo', inputId: 'subtitle' },
+            { id: 'city', name: 'Cidade', inputId: 'city' },
+            { id: 'year', name: 'Ano de Publicação', inputId: 'year' },
+            { id: 'publisher', name: 'Editora', inputId: 'bookPublisher' },
+            { id: 'edition', name: 'Edição', inputId: 'bookEdition' },
+            { id: 'pages', name: 'Páginas', inputId: 'bookPages' }
         ];
 
         fieldsToMap.forEach(f => {
